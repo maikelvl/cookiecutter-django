@@ -14,7 +14,7 @@ First, get cookiecutter::
 
 Now run it against this repo::
 
-    $ cookiecutter https://gitlab.grimlock.io/mediamoose/cookiecutter-django.git
+    $ cookiecutter git@git.grimlock.io:mediamoose/cookiecutter-django.git
 
 You'll be prompted for some questions, answer them, then it will create a Django project for you.
 
