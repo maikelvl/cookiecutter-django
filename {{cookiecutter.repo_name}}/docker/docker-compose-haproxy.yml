@@ -1,0 +1,19 @@
+haproxy:
+    image: mediamoose/haproxy:1.0.1
+    restart: always
+    net: host
+    volumes:
+        - {{ cookiecutter.short_name }}-haproxy-confd:/etc/confd
+    environment:
+        TIMEZONE: {{ cookiecutter.timezone }}
+        HOST: {{ cookiecutter.host_name }}
+
+confd:
+    image: mediamoose/confd:1.0.1
+    restart: always
+    net: host
+    volumes:
+        - {{ cookiecutter.short_name }}-haproxy-confd:/etc/confd
+    environment:
+        KEY_VALUE_TYPE: etcd
+        KEY_VALUE_ADDR: 127.0.0.1:2379

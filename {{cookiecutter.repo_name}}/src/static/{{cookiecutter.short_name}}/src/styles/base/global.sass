@@ -1,0 +1,39 @@
+$selection-color:   $primary-color !default
+$delete-color:      #df6969 !default
+
+/* Global styles */
+/*---------------------------------------------------------------------------*/
+body
+    min-width: breakpoint(mobile)
+
+/* Custom text-selection colors */
+::selection
+	background: $selection-color
+	color: white
+	text-shadow: none
+
+::-moz-selection
+	background: $selection-color
+	color: white
+	text-shadow: none
+
+ul
+	&.bare
+		margin: 0
+		padding: 0
+		list-style: none
+
+.link--remove
+    color: $delete-color
+
+    &:hover
+        color: shade($delete-color, 10%)
+
+        .icn
+            fill: shade($delete-color, 10%)
+
+    .icn
+        fill: $delete-color
+
+    span
+        vertical-align: middle

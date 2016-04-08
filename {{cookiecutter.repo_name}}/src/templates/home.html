@@ -1,0 +1,18 @@
+{% raw %}{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content-wrapper_classes %} content-wrapper--public{% endblock %}
+
+{% block masthead-navigation_classes %} masthead-navigation--public{% endblock %}
+{% block menu_branding %}{% endblock %}
+{% block masthead_search_button %}{% endblock %}
+
+{% block search-bar %}{% endblock %}
+
+{% block content %}
+    <section>
+        <h2 class="content__intro content__title">{% endraw %}{{ cookiecutter.project_name }}{% raw %}</h2>
+        <h3 class="content__intro content__subtitle">{% endraw %}{{ cookiecutter.description }}{% raw %}</h3>
+    </section>
+    {% include "inc/footer.html" %}
+{% endblock %}{% endraw %}

@@ -1,0 +1,7 @@
+{% raw %}{% load i18n svg %}
+<div class="alert alert--{% firstof message.level_tag tag 'info' %}">
+    <div class="alert__message alert__message--button">{{ message }}{% if message_url.url %} <a href="{{ message_url.url }}">{{ message_url.text }}</a>{% endif %}</div>
+    <button class="alert__close-button" type="button" title="{% trans "Melding sluiten" %}">
+        {% svg "{% endraw %}{{ cookiecutter.short_name }}{% raw %}/src/icons/cross.svg" class="icn icn--ic-12 icn--ic-close" %}
+    </button>
+</div>{% endraw %}

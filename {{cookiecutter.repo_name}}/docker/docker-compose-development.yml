@@ -1,0 +1,56 @@
+grunt:
+    command: watch
+    extends:
+        file: docker-compose-base.yml
+        service: grunt
+    volumes:
+        - ../src:/project/src
+        - ../src/static/{{ cookiecutter.short_name }}/dist:/project/src/static/{{ cookiecutter.short_name }}/dist
+    ports:
+        - "35728:35728"
+
+django:
+    extends:
+        file: docker-compose-base.yml
+        service: django
+    links:
+        - postgresql
+        - redis
+        - elasticsearch
+    command: runserver
+    ports:
+        - "8000:9000"
+    volumes:
+        - ../src:/project/src
+        - ../src/static/{{ cookiecutter.short_name }}/dist:/project/src/static/{{ cookiecutter.short_name }}/dist
+        - ../media:/project/media
+        - ../htmlcov:/project/htmlcov
+        - {{ cookiecutter.short_name }}_dev-staticfiles:/project/staticfiles
+    environment:
+        DJANGO_ALLOWED_HOSTS: "*"
+        DJANGO_SECRET_KEY: "secret"
+        DJANGO_SETTINGS_MODULE: main.settings.development
+        ENVIRONMENT: development
+
+postgresql:
+    extends:
+        file: docker-compose-base.yml
+        service: postgresql
+    volumes:
+        - {{ cookiecutter.short_name }}_dev-postgresql:/var/lib/postgresql
+    ports:
+        - "5432:5432"
+
+redis:
+    extends:
+        file: docker-compose-base.yml
+        service: redis
+    volumes:
+        - {{ cookiecutter.short_name }}_dev-redis:/data
+
+elasticsearch:
+    extends:
+        file: docker-compose-base.yml
+        service: elasticsearch
+    volumes:
+        - {{ cookiecutter.short_name }}_dev-elasticsearch:/usr/share/elasticsearch/data

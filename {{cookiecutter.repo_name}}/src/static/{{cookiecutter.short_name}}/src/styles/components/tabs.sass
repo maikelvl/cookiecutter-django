@@ -1,0 +1,43 @@
+.tabs__list
+    display: none
+    margin: 30px 0
+    padding: 0
+
+    color: $primary-color
+
+    border-bottom: 1px solid $border-color
+
+    list-style: none
+
+    +mq-tablet-landscape
+        display: block
+
+.tabs__list-item
+    position: relative
+
+    display: inline-block
+    margin-bottom: -1px
+    border: 1px solid transparent
+    border-radius: 3px 3px 0 0
+
+    &.active
+        border-color: $border-color
+        border-bottom-color: #fff
+
+.tab__link
+    display: block
+    padding: 9px 18px
+
+    line-height: 30px
+
+    color: $primary-color
+    text-decoration: none
+
+    &:hover
+        color: shade($primary-color, 10%)
+
+.tabs__pane
+    display: none
+
+    &.active
+        display: block

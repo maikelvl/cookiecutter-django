@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+  <defs>
+    <style>
+      .cls-1 {
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="youtube" class="cls-1" d="M9,3.019c-9,0-9,0-9,6s0,6,9,6,9,0,9-6S18,3.019,9,3.019Zm-2.25,9.174V5.84l5.625,3.176Z"/>
+</svg>

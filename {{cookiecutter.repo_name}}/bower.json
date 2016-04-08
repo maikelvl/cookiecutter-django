@@ -1,0 +1,22 @@
+{
+  "name": "{{ cookiecutter.repo_name }}",
+  "description": "{{ cookiecutter.description }}",
+  "version": "{{ cookiecutter.version }}",
+  "authors": [
+    "{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "2.2.0",
+    "selectivizr-bower": "1.0.3",
+    "normalize.css": "3.0.3",
+    "html5shiv": "3.7.3"
+  }
+}

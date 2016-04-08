@@ -1,0 +1,30 @@
+#!/bin/sh
+set -e
+
+project_basename="{{ cookiecutter.short_name }}ci"
+project_name="${project_basename}${CI_BUILD_REF}"
+docker_compose="docker-compose \
+    --project-name ${project_name} \
+    --file docker/docker-compose-test.yml"
+
+cleanup() {
+    docker rm -vf ${project_name}-grunt 2>/dev/null || echo "${project_name}-grunt"
+}
+
+# Validate docker-compose file
+$docker_compose config --quiet
+
+no_grunt_services=$($docker_compose config --services | grep -vx grunt)
+trap cleanup SIGTERM EXIT INT
+
+$docker_compose build --pull grunt
+docker rm -vf ${project_name}-grunt 2>/dev/null || echo "${project_name}-grunt"
+docker create --name ${project_name}-grunt ${project_name}_grunt
+rm -rf src/static
+docker cp ${project_name}-grunt:/project/src/static src/static
+$docker_compose build --pull $no_grunt_services
+rm -rf src/static
+
+docker tag -f ${project_name}_django ${project_basename}_django_latest
+docker tag -f ${project_name}_grunt ${project_basename}_grunt_latest
+cleanup

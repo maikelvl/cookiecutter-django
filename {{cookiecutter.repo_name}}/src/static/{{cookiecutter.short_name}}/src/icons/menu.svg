@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="22" viewBox="0 0 30 22">
+  <defs>
+    <style>
+      .cls-1 {
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="Rechthoek_3" data-name="Rechthoek 3" class="cls-1" d="M0.254,0H29.746V4.406H0.254V0Zm0,9.188H29.746v4.406H0.254V9.188Zm0,8.406H29.746V22H0.254V17.594Z"/>
+</svg>

@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+docker_compose="docker-compose \
+    --project-name {{ cookiecutter.short_name }}ci${CI_BUILD_REF} \
+    --file docker/docker-compose-test.yml"
+
+cleanup() {
+    echo "Cleanup"
+    $docker_compose kill
+    $docker_compose rm -vf
+}
+# This trap executes cleanup when this script fails
+trap cleanup SIGTERM EXIT INT
+
+
+$docker_compose run --rm django test
+
+# We cleanup anyways
+cleanup

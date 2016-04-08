@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+
+[ "$CI_PROJECT_DIR" == "/builds/{{ '/'.join(cookiecutter.repository.replace(':', '/').split('/')[-2:]).replace('.git', '') }}" ] && exit 0
+[ ! $CI_UPSTREAM_TOKEN ] && echo 'Please add CI_UPSTREAM_TOKEN to your variables.' && exit 1
+git remote remove upstream 2>/dev/null || echo -n ''
+git remote add --fetch upstream https://gitlab-ci-token:$CI_UPSTREAM_TOKEN@{{ cookiecutter.repository.split('@')[1].replace(':', '/') }}
+git rebase --abort || echo -n ''
+git rebase upstream/master | grep -qi 'up to date' || exit 1

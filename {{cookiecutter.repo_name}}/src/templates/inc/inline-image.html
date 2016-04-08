@@ -1,0 +1,11 @@
+{% raw %}{% load thumbnail %}
+<figure class="content__image-holder{% if image.image_height > image.image_width %} content__image-holder--portrait{% endif %}">
+    {% if image.url %}<a href="{{ image.url }}" rel="nofollow" target="_blank">{% endif %}
+        <img class="content__image" src="{% thumbnail image.image "700" crop="center" upscale=False %}" alt="{{ image.alt_text }}"/>
+    {% if image.url %}</a>{% endif %}
+    {% if image.caption %}
+        <figcaption class="content__image-caption">
+            {% if image.url %}<a href="{{ image.url }}" rel="nofollow" target="_blank">{% endif %}{{ image.caption }}{% if image.url %}</a>{% endif %}
+        </figcaption>
+    {% endif %}
+</figure>{% endraw %}

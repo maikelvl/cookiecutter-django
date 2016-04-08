@@ -1,0 +1,64 @@
+grunt:
+    extends:
+        file: docker-compose-base.yml
+        service: grunt
+    volumes:
+        - {{ cookiecutter.short_name }}_staging-static-dist:/project/src/static/{{ cookiecutter.short_name }}/dist
+
+nginx:
+    extends:
+        file: docker-compose-base.yml
+        service: nginx
+    links:
+        - django
+    volumes:
+        - {{ cookiecutter.short_name }}_staging-media:/project/media:ro
+        - {{ cookiecutter.short_name }}_staging-staticfiles:/project/staticfiles:ro
+    env_file: ../.env
+    environment:
+        NGINX_SERVER_CONF: staging.conf
+        NGINX_MAIN_HOSTNAME: {{ cookiecutter.staging_host_name }}
+
+django:
+    extends:
+        file: docker-compose-base.yml
+        service: django
+    links:
+        - postgresql
+        - redis
+        - elasticsearch
+    volumes:
+        - {{ cookiecutter.short_name }}_staging-media:/project/media
+        - {{ cookiecutter.short_name }}_staging-staticfiles:/project/staticfiles
+    env_file: ../.env
+    environment:
+        DJANGO_ALLOWED_HOSTS: .{{ cookiecutter.staging_host_name }}
+        {% if cookiecutter.opbeat_staging_app_id != '' %}DJANGO_OPBEAT_ORGANIZATION_ID: {{ cookiecutter.opbeat_organisation_id }}
+        DJANGO_OPBEAT_APP_ID: {{ cookiecutter.opbeat_staging_app_id }}{% endif %}
+        DJANGO_SETTINGS_MODULE: main.settings.staging
+        {% if cookiecutter.smtp_host != '' %}DJANGO_SMTP_HOST: {{ cookiecutter.smtp_host }}
+        DJANGO_SMTP_PORT: {{ cookiecutter.smtp_port }}
+        DJANGO_SMTP_TLS: "true"
+        DJANGO_SMTP_USER: {{ cookiecutter.smtp_user }}{% endif %}
+
+postgresql:
+    extends:
+        file: docker-compose-base.yml
+        service: postgresql
+    volumes:
+        - {{ cookiecutter.short_name }}_staging-postgresql:/var/lib/postgresql
+    env_file: ../.env
+
+redis:
+    extends:
+        file: docker-compose-base.yml
+        service: redis
+    volumes:
+        - {{ cookiecutter.short_name }}_staging-redis:/data
+
+elasticsearch:
+    extends:
+        file: docker-compose-base.yml
+        service: elasticsearch
+    volumes:
+        - {{ cookiecutter.short_name }}_staging-elasticsearch:/usr/share/elasticsearch/data

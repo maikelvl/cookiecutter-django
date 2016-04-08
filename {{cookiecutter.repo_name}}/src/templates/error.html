@@ -1,0 +1,26 @@
+{% raw %}{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block title %}{{ object.title }} | {{ block.super }}{% endblock %}
+{% block og_title %}{{ object.title }} | {{ block.super }}{% endblock %}
+
+{% block content-wrapper_classes %} content-wrapper--public{% endblock %}
+{% block site-masthead__button-holder_classes %} site-masthead__button-holder--public{% endblock %}
+
+{% block masthead-navigation_classes %} masthead-navigation--public{% endblock %}
+{% block menu_branding %}{% endblock %}
+{% block masthead_search_button %}{% endblock %}
+
+{% block content %}
+    <div class="content clearfix">
+        <section class="public-content public-content--vertical-center public-content--error">
+            <div class="public-content__holder public-content__holder--align-center">
+                <h1 class="public-content__title">{% block error_heading %}{% endblock %}</h1>
+                <p class="public-content__description public-content__description--align-center">{% block error_description %}{% endblock %}</p>
+                <a class="public-content__link public-content__link--error" href="{% url 'home' %}">{% trans 'Naar de homepage' %}</a>
+            </div>
+        </section>
+
+        {% include "inc/footer.html" %}
+    </div>
+{% endblock %}{% endraw %}

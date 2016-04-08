@@ -1,0 +1,91 @@
+$base-font-family:		    'Lato', Helvetica, Arial, Verdana, sans-serif !default
+$base-font-size:			16px !default //62.5% = 10px
+$base-line-height:		    1.5 !default
+$base-font-weight:		    400 !default
+$base-line-height-em:		strip-unit($base-line-height / $base-font-size) !default
+$base-color:				#000 !default
+
+$title-font-family:		    $base-font-family !default
+$title-font-size:		    20px !default //62.5% = 10px
+$title-line-height:		    1.2 !default
+$title-font-weight:		    700 !default
+$title-color:			    $base-color !default
+
+$link-color:				$secondary-color !default
+$link-color-hover:		    shade($link-color, 10%) !default
+$link-color-active:		    shade($link-color-hover, 10%) !default
+$strong-weight:				700 !default
+
+/* Typography */
+html
+	font-family: $base-font-family
+	font-size: $base-font-size
+	line-height: $base-line-height
+	font-weight: $base-font-weight
+	color: $base-color
+
+	text-rendering: optimizeLegibility
+	-webkit-font-smoothing: antialiased
+	-moz-osx-font-smoothing: grayscale
+
+/* Titles */
+.title,
+.subtitle
+	margin: 1em 0
+
+	font-family: $title-font-family
+	font-size: $title-font-size
+	line-height: $title-line-height
+	font-weight: $title-font-weight
+	color: $title-color
+
+/* Links */
+a
+    color: $link-color
+    @if $link-color-hover
+        &:hover
+            color: $link-color-hover
+    @if $link-color-active
+        &:active
+            color: $link-color-active
+
+    transition: color 200ms
+
+/* Text */
+h1, h2, h3, h4, h5, h6
+	margin: 0
+	//.content &
+	//	margin: 1.5em 0
+
+	font-size: inherit
+	font-weight: 600
+
+p
+	//.content &
+	//	margin: 1.5em 0
+
+	&:empty
+		display: none
+
+.monospace
+	font-family: monospace
+
+.content
+	blockquote
+		margin: 1.5em 0
+		font-style: italic
+
+i
+	font-style: normal
+
+strong
+    @if $strong-weight
+        font-weight: $strong-weight
+
+.bare
+	font-size: 0
+	line-height: 0
+
+	li
+		font-size:  $base-font-size
+		line-height: $base-line-height

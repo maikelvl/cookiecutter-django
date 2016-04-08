@@ -1,0 +1,28 @@
+FROM node:0.12.9
+
+MAINTAINER {{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>
+
+RUN npm install -g bower grunt-cli
+
+WORKDIR /project
+
+ENV TIMEZONE={{ cookiecutter.timezone }}
+RUN echo "$TIMEZONE" > /etc/timezone \
+ && dpkg-reconfigure -f noninteractive tzdata
+
+COPY package.json /project/
+RUN npm install --unsafe-perm
+
+COPY bower.json /project/
+RUN bower install --allow-root --config.interactive=false
+
+COPY .jshintignore /project/
+COPY Gruntfile.js /project/
+COPY docker/grunt/entrypoint.sh /
+
+COPY src/static /project/src/static
+COPY src/templates /project/src/templates
+RUN /entrypoint.sh build
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["build"]

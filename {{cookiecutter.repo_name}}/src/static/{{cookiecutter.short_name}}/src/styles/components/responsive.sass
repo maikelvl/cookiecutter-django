@@ -1,0 +1,13 @@
+// See https://gist.github.com/crobays/c2a9141b8cd0d5dd7a69
+[data-bp]
+	display: none
+@each $breakpoint, $width in $breakpoints
+	[data-bp="#{$breakpoint}"]
+		+bp($width)
+			display: initial
+
+$step: 20
+@for $width from (320px / $step) through (2000px / $step)
+	+bp($width * $step)
+		[data-bp="#{strip-unit($width * $step)}"]
+			display: initial

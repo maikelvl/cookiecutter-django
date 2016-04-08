@@ -1,0 +1,53 @@
+//$breakpoints: (
+//	mobile:			320px,
+//	tablet-portrait:   600px,
+//	tablet-landscape:  1000px,
+//	desktop:		   1200px,
+//	desktop-large:	 1440px,
+//	desktop-xlarge:	1600px,
+//	desktop-obese:	 2000px,
+//) !default
+
+$breakpoints: (mobile: 320px, tablet: 600px, tablet-portrait: 600px, tablet-landscape: 1000px, desktop: 1200px, desktop-large: 1440px, desktop-xlarge: 1600px, desktop-bese: 2000px) !default
+
+/* Mediaqueries */
+=bp($min-width)
+	$bp-width: breakpoint($min-width)
+	@if $bp-width
+		$min-width: $bp-width
+	$query: "screen and (min-width: #{$min-width})"
+	@media #{$query}
+		@content
+
+=mq-mobile()
+	+bp('mobile')
+		@content
+
+=mq-tablet()
+	+bp('tablet')
+		@content
+
+=mq-tablet-portrait()
+	+bp('tablet-portrait')
+		@content
+
+=mq-tablet-landscape()
+	+bp('tablet-landscape')
+		@content
+
+=mq-desktop()
+	+bp('desktop')
+		@content
+
+=mq-desktop-large()
+	+bp('desktop-large')
+		@content
+
+=mq-desktop-xlarge()
+	+bp('desktop-xlarge')
+		@content
+
+=mq-desktop-obese()
+	+bp('desktop-obese')
+		@content
+

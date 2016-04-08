@@ -1,0 +1,12 @@
+{% raw %}{% load staticfiles svg i18n %}
+
+<footer class="footer">
+    <div class="footer__holder">
+        <div class="footer__information">
+            <div class="footer__information-links">
+
+            </div>
+            <span>&copy; {% endraw %}{% now cookiecutter.timezone, '%Y' %} {{ cookiecutter.project_name }}{% raw %}</span>
+        </div>
+    </div>
+</footer>{% endraw %}

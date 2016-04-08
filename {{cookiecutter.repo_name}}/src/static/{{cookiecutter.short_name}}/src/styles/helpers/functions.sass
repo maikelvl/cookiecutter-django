@@ -1,0 +1,18 @@
+/* Strip unit */
+@function strip-unit($num)
+	@return ($num / ($num * 0 + 1))
+
+/* Breakpoints */
+@function breakpoint($name)
+	@each $_name, $width in $breakpoints
+		@if $_name == $name
+			@return $width
+	@return false
+
+/* Tint color */
+@function tint($color, $percentage)
+    @return mix(white, $color, $percentage)
+
+/* Shade color */
+@function shade($color, $percentage)
+    @return mix(black, $color, $percentage)

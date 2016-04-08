@@ -1,0 +1,29 @@
+before_script:
+    - docker info
+
+stages:
+    - rebased
+    - build
+    - test-django
+    - cleanup
+
+rebased:
+    stage: rebased
+    script:
+        - ci/rebased
+
+build:
+    stage: build
+    script:
+        - ci/build
+
+test-django:
+    stage: test-django
+    script:
+        - ci/test-django
+
+cleanup:
+    stage: cleanup
+    script:
+        - ci/cleanup
+    when: always

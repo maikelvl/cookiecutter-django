@@ -1,0 +1,9 @@
+{% raw %}{% extends "error.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Pagina niet gevonden" %} | {{ block.super }}{% endblock %}
+{% block og_title %}{% trans "Pagina niet gevonden" %} | {{ block.super }}{% endblock %}
+
+{% block error_heading %}{% trans "Pagina bestaat niet." %}{% endblock %}
+{% block error_description %}{% trans "De pagina die u probeert te breiken bestaat helaas niet." %}{% endblock %}{% endraw %}
+

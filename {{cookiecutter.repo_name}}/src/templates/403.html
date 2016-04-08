@@ -1,0 +1,9 @@
+{% raw %}{% extends "error.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Geen toegang" %} | {{ block.super }}{% endblock %}
+{% block og_title %}{% trans "Geen toegang" %} | {{ block.super }}{% endblock %}
+
+{% block error_heading %}{% trans "Geen toegang." %}{% endblock %}
+{% block error_description %}{% trans "U heeft helaas geen toegang tot de pagina die u probeert te bereiken." %}{% endblock %}{% endraw %}
+

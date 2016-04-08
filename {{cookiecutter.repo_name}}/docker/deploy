@@ -1,0 +1,144 @@
+{% raw %}#!/bin/ash
+[ $DEBUG ] && set -x
+
+cd /project
+
+
+while [ "$environment" == "" ];do
+    environment=$ENVIRONMENT
+    if [ "$environment" == "" ];then
+        if [ ! $INTERACTIVE ];then
+            echo "Please set an ENVIRONMENT [production,staging,development] or run interactive mode (-it)."
+            exit 1
+        fi
+        echo "Please choose an environment:"
+        echo "  1) production"
+        echo "  2) staging"
+        echo "  3) development"
+        read -p "Which ENVIRONMENT? " environment
+    fi
+	if [ "$environment" == "1" ] || [ "${environment:0:4}" == "prod" ];then
+	    environment=prod
+	elif [ "$environment" == "2" ] || [ "${environment:0:4}" == "stag" ];then
+	    environment=stag
+	elif [ "$environment" == "3" ] || [ "${environment:0:3}" == "dev" ];then
+	    environment=dev
+	else
+	    environment=
+	    ENVIRONMENT=
+	fi
+done
+
+if [ "$environment" == "prod" ];then
+    docker_compose_file="--file docker/docker-compose.yml"
+elif [ "$environment" == "stag" ];then
+    docker_compose_file="--file docker/docker-compose-staging.yml"
+elif [ "$environment" == "dev" ];then
+    docker_compose_file="--file docker/docker-compose-development.yml"
+fi
+
+echo "Docker compose file: $docker_compose_file"
+
+docker exec ${PROJECT_NAME}_postgresqldumpcron_1 /entrypoint.sh dump 2>/dev/null
+
+touch './.env'
+if ! docker-compose -p ${PROJECT_NAME} $docker_compose_file build --pull grunt;then
+	echo "Grunt image build failed. Aborting."
+	exit 1
+fi
+
+docker rm --force --volumes ${PROJECT_NAME}_grunt_1 2>/dev/null
+docker create --name ${PROJECT_NAME}_grunt_1 ${PROJECT_NAME}_grunt
+docker cp ${PROJECT_NAME}_grunt_1:/project/src/static/${PROJECT_NAME}/dist /project/src/static/${PROJECT_NAME}/dist
+docker rm --volumes ${PROJECT_NAME}_grunt_1
+if [ ! -d /project/src/static/${PROJECT_NAME}/dist ];then
+	echo "Grunt dist folder not found. Boooeee!"
+	exit 1
+fi
+rm './.env'
+
+if [ ! `docker ps -q --filter="name=${PROJECT_NAME}_haproxy_1"` ] && [ $RUN_HAPROXY ];then
+    echo "Starting HAProxy"
+	docker-compose -p ${PROJECT_NAME} --file docker/docker-compose-haproxy.yml up -d
+fi
+
+if ! docker volume inspect ${PROJECT_NAME}-env 2>/dev/null;then
+	docker volume create --name ${PROJECT_NAME}-env
+fi
+
+docker create \
+	--name ${PROJECT_NAME}-tmp \
+	--volume ${PROJECT_NAME}-env:/data \
+	busybox
+if ! docker cp ${PROJECT_NAME}-tmp:/data/env ./.env 2>/dev/null;then
+	docker cp ./.env.example ${PROJECT_NAME}-tmp:/data/env
+	docker rm ${PROJECT_NAME}-tmp 2>/dev/null
+	EDIT_ENV=1
+fi
+docker rm ${PROJECT_NAME}-tmp 2>/dev/null
+
+if [ $EDIT_ENV ];then
+	if [ ! $INTERACTIVE ];then
+		docker volume rm ${PROJECT_NAME}-env
+		echo "This initial deployment requires an interactive session."
+		echo "(Add '-it' to the docker run command)"
+		exit 1
+	fi
+	# Not passing --rm otherwise the ${PROJECT_NAME}-env volume would be removed
+    docker run -it \
+		--name ${PROJECT_NAME}-tmp \
+		--volume ${PROJECT_NAME}-env:/data \
+		busybox vi /data/env
+	docker cp ${PROJECT_NAME}-tmp:/data/env ./.env
+	docker rm ${PROJECT_NAME}-tmp 2>/dev/null
+fi
+
+if [ $DEBUG ];then
+    cat docker/docker-compose.yml
+    if [ "$environment" == "stag" ];then
+        cat docker/docker-compose-staging.yml
+    fi
+fi
+
+docker-compose -p ${PROJECT_NAME} $docker_compose_file build --pull || exit 1
+if [ $RUN_TESTS ];then
+	docker rm -f django_test 2>/dev/null
+	if ! docker-compose -p ${PROJECT_NAME} $docker_compose_file run --name django_test django test;then
+		echo "Tests failed. Aborting."
+		docker stop django_test 2>/dev/null
+		exit 1
+	fi
+	docker stop django_test 2>/dev/null
+	if [ ! `docker ps -q --filter="name=${PROJECT_NAME}_postgresql_1"` ];then
+		fresh_install=1
+	fi
+fi
+docker-compose -p ${PROJECT_NAME} $docker_compose_file up -d || exit 1
+if [ $fresh_install ] && [ $INTERACTIVE ];then
+	docker exec -it ${PROJECT_NAME}_django_1 /entrypoint.sh manage createsuperuser
+fi
+rm -rf ${PROJECT_NAME}-deployment
+
+etcdctl_set() {
+    curl --location --request PUT http://${ETCD_ADDR:-127.0.0.1}:${ETCD_PORT:-2379}/v2/keys/$1 --data "value=$2"
+}
+
+# Fetch the NGINX HOSTNAME
+HOST=${HOST:-$(docker-compose -p ${PROJECT_NAME} $docker_compose_file config | sed -rn "s/.*NGINX_MAIN_HOSTNAME:\s['\"]?(.*)['\"]?/\1/p")}
+if [ $HOST ];then
+    ip="$(docker inspect --format="{{ .NetworkSettings.IPAddress }}" ${PROJECT_NAME}_nginx_1)"
+
+    etcdctl_set haproxy/backends/http/053-${HOST}/1 $ip:80
+    etcdctl_set haproxy/backends/https/053-${HOST}/1 $ip:443
+    etcdctl_set haproxy/frontends/80/053-${HOST}/1/1 "hdr(host) -i ${HOST}"
+    etcdctl_set haproxy/frontends/443/053-${HOST}/1/1 "hdr(host) -i ${HOST}"
+    if [ "${HOST:0:4}" == "www." ];then
+        etcdctl_set haproxy/backends/http/053-${HOST:4}/1 $ip:80
+        etcdctl_set haproxy/backends/https/053-${HOST:4}/1 $ip:443
+        etcdctl_set haproxy/frontends/80/053-${HOST:4}/1/1 "hdr(host) -i ${HOST:4}"
+        etcdctl_set haproxy/frontends/443/053-${HOST:4}/1/1 "hdr(host) -i ${HOST:4}"
+    fi
+else
+    echo "Could not fetch NGINX_MAIN_HOSTNAME from docker-compose files $docker_compose_file"
+    exit 1
+fi{% endraw %}

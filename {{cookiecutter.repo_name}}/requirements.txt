@@ -1,0 +1,16 @@
+bleach==1.4.2
+{% if cookiecutter.use_aws_s3 == 'y' %}boto==2.39.0{% endif %}
+django==1.9.5
+django-environ==0.4.0
+django-extra-views==0.7.1
+django-haystack==2.4.1
+django-model-utils==2.4
+django-redis==4.3.0
+{% if cookiecutter.use_django_suit == 'y' %}django-suit==0.2.18{% endif %}
+elasticsearch==2.2.0
+{% if cookiecutter.opbeat_organisation_id %}opbeat==3.2.1{% endif %}
+pillow==2.9.0
+psycopg2==2.6.1
+sorl-thumbnail==12.3
+uwsgi==2.0.12
+whitenoise==2.0.6

@@ -1,0 +1,28 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Unit test / coverage reports
+/htmlcov/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+
+# Translations
+*.mo
+
+# Django stuff:
+*.log
+
+# Sphinx documentation
+/docs/_build/
+
+# IDE
+/.idea/
+
+# Enviorment variables, django-environ
+/.env
+
+/src/static/{{ cookiecutter.short_name }}/dist/
+/media/

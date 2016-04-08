@@ -1,0 +1,24 @@
+=same($values...)
+	$length: length($values)
+	$value: nth($values, $length)
+
+	@for $i from 1 to $length
+		#{nth($values, $i)}: $value
+
+
+// This mixin takes care of triggering the focus event on touch devices by adding
+// the hover pseudo selector. The &%content extend is used to keep output DRY
+// See https://gist.github.com/crobays/da453ae9fd4ee0ad53f2
+=focus
+	&%content
+		@content
+	&:focus
+		@extend %content
+	.touch &
+		&:hover
+			@extend %content
+
+/* Background-color with opacity */
+@mixin background-opacity($color, $opacity: 0.25)
+    background: $color /* The Fallback */
+    background: rgba($color, $opacity)

@@ -1,0 +1,11 @@
+{% raw %}{% load i18n staticfiles generic %}{% endraw %}<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+    <ShortName>{% raw %}{% trans "{% endraw %}{{ cookiecutter.project_name }}{% raw %}" %}{% endraw %}</ShortName>
+    <Description>{% raw %}{% trans "Zoek in {% endraw %}{{ cookiecutter.project_name }}{% raw %}." %}{% endraw %}</Description>
+    <Image type="image/x-icon">{% raw %}{{ protocol }}://{{ domain }}{% static '{% endraw %}{{ cookiecutter.short_name }}{% raw %}/favicons/favicon.ico' %}{% endraw %}</Image>
+    <Tags>{% raw %}{% trans "{% endraw %}{{ cookiecutter.project_name }}{% raw %}" %}{% endraw %}</Tags>
+    <Language>{% raw %}{{ LANGUAGE_CODE|replace:"_,-"  }}{% endraw %}</Language>
+    <Url type="text/html" template="{% raw %}{{ base_url }}{% url "search" %}{% endraw %}?q={searchTerms}"/>
+    <Attribution>{% raw %}{% trans "Copyright {% endraw %}{{ cookiecutter.project_name }}{% raw %}" %}{% endraw %}</Attribution>
+    <SyndicationRight>limited</SyndicationRight>
+</OpenSearchDescription>

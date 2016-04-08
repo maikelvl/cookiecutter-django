@@ -1,0 +1,34 @@
+grunt:
+    extends:
+        file: docker-compose-base.yml
+        service: grunt
+
+django:
+    extends:
+        file: docker-compose-base.yml
+        service: django
+    command: test
+    links:
+        - postgresql
+        - redis
+        - elasticsearch
+    environment:
+        DJANGO_ALLOWED_HOSTS: "*"
+        DJANGO_SECRET_KEY: "secret"
+        DJANGO_SETTINGS_MODULE: main.settings.testing
+        ENVIRONMENT: testing
+
+postgresql:
+    extends:
+        file: docker-compose-base.yml
+        service: postgresql
+
+redis:
+    extends:
+        file: docker-compose-base.yml
+        service: redis
+
+elasticsearch:
+    extends:
+        file: docker-compose-base.yml
+        service: elasticsearch

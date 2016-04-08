@@ -1,0 +1,8 @@
+alias build="./docker/docker-compose dev build"
+alias up="./docker/docker-compose dev up"
+alias run="./docker/docker-compose dev run --service-ports"
+alias test="./docker/docker-compose dev run --rm --name {{ cookiecutter.short_name }}_django_1 django test"
+alias pytest="./docker/docker-compose dev run --rm django pytest"
+alias autosort="./docker/docker-compose dev run --rm django isort -rc src"
+alias manage="./docker/docker-compose dev run --rm django manage"
+alias de="docker exec -it {{ cookiecutter.short_name }}_django /entrypoint.sh"

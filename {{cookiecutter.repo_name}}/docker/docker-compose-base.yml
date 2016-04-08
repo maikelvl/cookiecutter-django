@@ -1,0 +1,38 @@
+grunt:
+    build: ..
+    dockerfile: Dockerfile-grunt
+    command: build
+
+nginx:
+    build: ./nginx
+
+django:
+    build: ..
+    command: start_uwsgi
+    environment:
+        DJANGO_MIGRATE: 1
+        DJANGO_REBUID_SEARCH_INDEX: 1
+        DJANGO_SETTINGS_MODULE: main.settings.production
+        DJANGO_STATIC_HOST: ""
+
+postgresql:
+    image: mediamoose/postgresql:9.4
+
+postgresqldumpcron:
+    image: mediamoose/postgresql:9.4
+    command: dump-cron
+    environment:
+        POSTGRESQL_DUMP_CRON_SCHEDULE: '30 3 * * *'
+
+{% if cookiecutter.use_aws_s3 == 'y' %}backuprunner:
+    image: mediamoose/aws-s3:1.1.0
+    environment:
+        AWS_S3_METHOD: watch
+        AWS_S3_WATCH_DIRECTORY: /data
+        AWS_S3_TIMEZONE: {{ cookiecutter.timezone }}
+{% endif %}
+redis:
+    image: redis:3.0.6
+
+elasticsearch:
+    image: elasticsearch:2.1.1

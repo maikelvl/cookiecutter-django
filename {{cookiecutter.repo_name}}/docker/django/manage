@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+[ $DEBUG ] && set -x
+
+source /env-vars.sh
+python /project/src/manage.py $@

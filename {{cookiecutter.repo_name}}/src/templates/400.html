@@ -1,0 +1,8 @@
+{% raw %}{% extends "error.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Er gaat iets fout" %} | {{ block.super }}{% endblock %}
+{% block og_title %}{% trans "Er gaat iets fout" %} | {{ block.super }}{% endblock %}
+
+{% block error_heading %}{% trans "Aanvraag niet begrepen." %}{% endblock %}
+{% block error_description %}{% trans "Uw aanvraag wordt helaas niet begrepen door het systeem." %}{% endblock %}{% endraw %}

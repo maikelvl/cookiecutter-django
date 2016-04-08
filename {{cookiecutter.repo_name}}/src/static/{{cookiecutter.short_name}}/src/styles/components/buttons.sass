@@ -1,0 +1,111 @@
+$btn-background-color:  #000 !default
+$btn-font-color:        #fff !default
+$btn-font-size:         12px !default
+$btn-font-weight:       600 !default
+$btn-line-height:       30px !default
+$btn-uppercase:         true !default
+$btn-base-padding:      5px !default
+
+$btn-secondary-background-color: $secondary-color !default
+$btn-secondary-font-color: $base-color !default
+
+$btn-tertiary-background-color: $tertiary-color !default
+$btn-tertiary-font-color: #fff !default
+
+$btn-danger-background-color: $error-color !default
+$btn-danger-font-color: #fff !default
+
+/* Buttons */
+button
+	box-sizing: content-box
+	border: 0 none
+	outline: 0 none
+	background-color: transparent
+
+    text-rendering: optimizeLegibility
+    -webkit-font-smoothing: antialiased
+    -moz-osx-font-smoothing: grayscale
+
+    cursor: pointer
+
+.btn
+    box-sizing: border-box
+    display: inline-block
+    min-width: 150px
+    margin: 0
+    padding: $btn-base-padding ($btn-base-padding * 4)
+
+    background-color: $btn-background-color
+    border: 0 none
+    border-radius: 5px
+    transition: background-color 200ms
+
+    font-size: $btn-font-size
+    font-weight: $btn-font-weight
+    line-height: $btn-line-height
+    color: $btn-font-color
+    text-align: center
+    text-decoration: none
+    @if $btn-uppercase
+        text-transform: uppercase
+
+    &:hover
+        color: $btn-font-color
+
+        background-color: tint($btn-background-color, 10%)
+
+    //&:active
+    //    position: relative
+    //    top: 2px
+    //    box-shadow: none
+
+    &:disabled,
+    &.disabled
+        color: rgba($btn-font-color, .2)
+        cursor: not-allowed
+
+        button&
+            cursor: auto
+
+        &:hover
+            background-color: $btn-background-color
+
+.btn--search
+    min-width: 0
+    padding: 0 10px
+    height: 50px
+
+    font-size: 14px
+    font-weight: 400
+    line-height: 25px
+
+    border-radius: 0 3px 3px 0
+
+    +mq-tablet-portrait
+        padding: 0 40px
+        height: 75px
+
+    .lt-ie10 &
+        display: table-cell
+
+.btn--search-header
+    height: 50px
+    padding: 0 25px
+
+    +mq-desktop
+        padding-left: 40px
+        padding-right: 40px
+
+.btn--truncate
+    max-width: 100%
+
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+
+.btn--form-footer
+    margin: 30px 0
+
+    +mq-tablet-portrait
+        .lt-ie10 &
+            display: table-cell

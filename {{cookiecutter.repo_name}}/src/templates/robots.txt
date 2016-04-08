@@ -1,0 +1,4 @@
+{% raw %}User-agent: *
+Disallow: {% if debug %}/{% endif %}
+
+Sitemap: {% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}{% url "sitemap" %}{% endraw %}

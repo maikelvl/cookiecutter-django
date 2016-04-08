@@ -1,0 +1,91 @@
+grunt:
+    extends:
+        file: docker-compose-base.yml
+        service: grunt
+    restart: always
+    volumes:
+        - {{ cookiecutter.short_name }}-static-dist:/project/src/static/{{ cookiecutter.short_name }}/dist
+
+nginx:
+    extends:
+        file: docker-compose-base.yml
+        service: grunt
+    restart: always
+    links:
+        - django
+    environment:
+        NGINX_MAIN_HOSTNAME: {{ cookiecutter.host_name }}
+
+django:
+    extends:
+        file: docker-compose-base.yml
+        service: django
+    restart: always
+    links:
+        - postgresql
+        - redis
+        - elasticsearch
+    volumes:
+        - {{ cookiecutter.short_name }}-staticfiles:/project/staticfiles
+        - {{ cookiecutter.short_name }}-static-dist:/project/src/static/{{ cookiecutter.short_name }}/dist
+    env_file: ../.env
+    environment:
+        DJANGO_ALLOWED_HOSTS: .{{ '.'.join(cookiecutter.host_name.split('.')[-2:]) }}
+        {% if cookiecutter.use_aws_s3 == 'y' %}DJANGO_AWS_STORAGE_BUCKET_NAME: media.{{ '.'.join(cookiecutter.host_name.split('.')[-2:]) }}
+        DJANGO_AWS_S3_CUSTOM_DOMAIN: media.{{ '.'.join(cookiecutter.host_name.split('.')[-2:]) }}{% endif %}
+        {% if cookiecutter.opbeat_production_app_id != '' %}DJANGO_OPBEAT_ORGANIZATION_ID: {{ cookiecutter.opbeat_organisation_id }}
+        DJANGO_OPBEAT_APP_ID: {{ cookiecutter.opbeat_production_app_id }}{% endif %}
+        DJANGO_STATIC_HOST: https://static-{{ cookiecutter.host_name }}
+        {% if cookiecutter.smtp_host != '' %}DJANGO_SMTP_HOST: {{ cookiecutter.smtp_host }}
+        DJANGO_SMTP_PORT: {{ cookiecutter.smtp_port }}
+        DJANGO_SMTP_TLS: "true"
+        DJANGO_SMTP_USER: {{ cookiecutter.smtp_user }}{% endif %}
+
+postgresql:
+    extends:
+        file: docker-compose-base.yml
+        service: postgresql
+    restart: always
+    volumes:
+        - {{ cookiecutter.short_name }}-postgresql:/var/lib/postgresql
+    env_file: ../.env
+
+postgresqldumpcron:
+    extends:
+        file: docker-compose-base.yml
+        service: postgresqldumpcron
+    restart: always
+    links:
+        - postgresql
+    volumes:
+        - {{ cookiecutter.short_name }}-backup:/var/share/backup
+
+{% if cookiecutter.use_aws_s3 == 'y' %}backuprunner:
+    extends:
+        file: docker-compose-base.yml
+        service: backuprunner
+    restart: always
+    volumes:
+        - {{ cookiecutter.short_name }}-backup:/data
+    env_file: ../.env
+    environment:
+        AWS_S3_AWS_DEFAULT_REGION: eu-west-1
+        AWS_S3_AWS_KEY: "{% raw %}{{$$AWS_ACCESS_KEY_ID}}{% endraw %}"
+        AWS_S3_AWS_SECRET: "{% raw %}{{$$AWS_SECRET_ACCESS_KEY}}{% endraw %}"
+        AWS_S3_AWS_S3_PATH: s3://backup.{{ '.'.join(cookiecutter.host_name.split('.')[-2:]) }}{% endif %}
+
+redis:
+    extends:
+        file: docker-compose-base.yml
+        service: redis
+    restart: always
+    volumes:
+        - {{ cookiecutter.short_name }}-redis:/data
+
+elasticsearch:
+    extends:
+        file: docker-compose-base.yml
+        service: elasticsearch
+    restart: always
+    volumes:
+        - {{ cookiecutter.short_name }}-elasticsearch:/usr/share/elasticsearch/data

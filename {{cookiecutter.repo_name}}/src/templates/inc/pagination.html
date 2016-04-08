@@ -1,0 +1,55 @@
+{% raw %}{% load i18n mathtags generic %}
+{% if is_paginated %}
+<ul class="pagination">
+    {% if page_obj.has_previous %}
+        <li class="pagination__list-item pagination__list-item--prev-next">
+            <a class="pagination__link"
+               href="{% paginator_get_params page_obj.previous_page_number %}">
+                {% trans "Vorige" %}
+            </a>
+        </li>
+    {% else %}
+        <li class="pagination__list-item pagination__list-item--prev-next pagination__list-item--inactive">
+            <span>{% trans "Vorige" %}</span></li>
+    {% endif %}
+
+    {% if page_obj.paginator.num_pages > 3 and page_obj.number >= 3 %}
+        <li class="pagination__list-item"><a href="{% paginator_get_params 1 %}" class="pagination__link pagination__number">1</a></li>
+        {% if page_obj.paginator.num_pages > 4 and page_obj.number > 3 %}
+            <li class="pagination__list-item"><span class="pagination__dots">&hellip;</span></li>
+        {% endif %}
+    {% endif %}
+
+    {% for page in page_obj.paginator.page_range %}
+        {% if page_obj.number|sub:1 < 1 and page <= 3 or page_obj.number|add:1 > page_obj.paginator.num_pages and page > page_obj.paginator.num_pages|sub:3 or page >= page_obj.number|sub:1 and page <= page_obj.number|add:1 %}
+            {% if page == page_obj.number %}
+                <li class="pagination__list-item pagination__list-item--active"><span class="pagination__number">{{ page }}</span></li>
+            {% else %}
+                <li class="pagination__list-item"><a href="{% paginator_get_params page %}" class="pagination__link pagination__number">{{ page }}</a></li>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.paginator.num_pages > 3 and page_obj.number <= page_obj.paginator.num_pages|sub:2 %}
+        {% if page_obj.paginator.num_pages > 4 and page_obj.number < page_obj.paginator.num_pages|sub:2 %}
+            <li class="pagination__list-item"><span class="pagination__dots">&hellip;</span></li>
+        {% endif %}
+        <li class="pagination__list-item">
+            <a href="{% paginator_get_params page_obj.paginator.num_pages %}" class="pagination__link pagination__number">
+                {{ page_obj.paginator.num_pages }}
+            </a>
+        </li>
+    {% endif %}
+
+    {% if page_obj.has_next %}
+        <li class="pagination__list-item pagination__list-item--prev-next">
+            <a class="pagination__link" href="{% paginator_get_params page_obj.next_page_number %}">
+                {% trans "Volgende" %}
+            </a>
+        </li>
+    {% else %}
+        <li class="pagination__list-item pagination__list-item--prev-next pagination__list-item--inactive">
+            <span>{% trans "Volgende" %}</span></li>
+    {% endif %}
+</ul>
+{% endif %}{% endraw %}

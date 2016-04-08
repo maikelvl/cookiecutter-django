@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+
+project_name="{{ cookiecutter.short_name }}ci${CI_BUILD_REF}"
+docker_compose="docker-compose \
+    --project-name ${project_name} \
+    --file docker/docker-compose-test.yml"
+
+for service in $($docker_compose config --services);do
+    docker rmi -f ${project_name}_${service} 2>/dev/null || echo "${project_name}_${service}"
+done

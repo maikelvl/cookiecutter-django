@@ -1,0 +1,24 @@
+#!/bin/sh
+set -e
+
+dc_file="docker/docker-compose.yml"
+if [ "${1:0:3}" == "dev" ];then
+    shift
+    dc_file="docker/docker-compose-development.yml"
+elif [ "${1:0:4}" == "stag" ];then
+    shift
+    dc_file="docker/docker-compose-staging.yml"
+elif [ "${1:0:4}" == "test" ];then
+    shift
+    dc_file="docker/docker-compose-test.yml"
+fi
+
+cmd=$@
+if [ "$cmd" == "" ];then
+    cmd=up
+fi
+
+docker-compose \
+    --project-name "{{ cookiecutter.short_name }}" \
+    --file "$dc_file" \
+    $cmd

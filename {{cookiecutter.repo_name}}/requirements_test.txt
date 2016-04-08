@@ -1,0 +1,6 @@
+flake8==2.5.4
+model-mommy==1.2.6
+simplegeneric==0.8.1
+pytest-cov==2.2.1
+pytest-django==2.9.1
+isort==4.2.2

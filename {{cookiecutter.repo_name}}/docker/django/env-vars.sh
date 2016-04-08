@@ -1,0 +1,35 @@
+#!/bin/sh
+export DJANGO_DATABASE_HOST="${DJANGO_DATABASE_HOST:-postgresql}"
+export DJANGO_DATABASE_PORT="${DJANGO_DATABASE_PORT:-5432}"
+
+export DJANGO_DATABASE_NAME="${DJANGO_DATABASE_NAME:-$POSTGRESQL_ENV_POSTGRESQL_DB_NAME}"
+export DJANGO_DATABASE_USER="${DJANGO_DATABASE_USER:-$POSTGRESQL_ENV_POSTGRESQL_DB_USER}"
+export DJANGO_DATABASE_PASS="${DJANGO_DATABASE_PASS:-$POSTGRESQL_ENV_POSTGRESQL_DB_PASS}"
+
+export DJANGO_DATABASE_NAME="${POSTGRESQL_DB_NAME:-$DJANGO_DATABASE_NAME}"
+export DJANGO_DATABASE_USER="${POSTGRESQL_DB_USER:-$DJANGO_DATABASE_USER}"
+export DJANGO_DATABASE_PASS="${POSTGRESQL_DB_PASS:-$DJANGO_DATABASE_PASS}"
+
+export DJANGO_CACHE_HOST="${DJANGO_CACHE_HOST:-redis}"
+export DJANGO_CACHE_PORT="${DJANGO_CACHE_PORT:-6379}"
+export DJANGO_ELASTICSEARCH_HOST="${DJANGO_ELASTICSEARCH_HOST:-elasticsearch}"
+export DJANGO_ELASTICSEARCH_PORT="${DJANGO_ELASTICSEARCH_PORT:-9200}"
+
+{% if cookiecutter.use_aws_s3 == 'y' %}export DJANGO_AWS_ACCESS_KEY_ID="${DJANGO_AWS_ACCESS_KEY_ID:-$AWS_ACCESS_KEY_ID}"{% endif %}
+{% if cookiecutter.use_aws_s3 == 'y' %}export DJANGO_AWS_SECRET_ACCESS_KEY="${DJANGO_AWS_SECRET_ACCESS_KEY:-$AWS_SECRET_ACCESS_KEY}"{% endif %}
+
+{% if cookiecutter.opbeat_organisation_id != '' %}export DJANGO_OPBEAT_SECRET_TOKEN="${DJANGO_OPBEAT_SECRET_TOKEN:-$OPBEAT_SECRET_TOKEN}"{% endif %}
+
+export DJANGO_SMTP_PASS="${DJANGO_SMTP_PASS:-$SMTP_PASS}"
+
+MEDIA_PATH=${MEDIA_PATH:-/project/media}
+
+if [ "${ENVIRONMENT:0:3}" == "dev" ];then
+	export PATH="/project/env/development/bin:$PATH"
+	export PYTHONPATH="/project/env/development/lib/python3.4/site-packages:$PYTHONPATH"
+fi
+
+if [ "${ENVIRONMENT:0:3}" == "dev" ] || [ "${ENVIRONMENT:0:4}" == "test" ];then
+	export PATH="/project/env/testing/bin:$PATH"
+	export PYTHONPATH="/project/env/testing/lib/python3.4/site-packages:$PYTHONPATH"
+fi

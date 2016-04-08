@@ -1,0 +1,94 @@
+$alert-font-size:           14px !default
+$alert-line-height:         30px !default
+$alert-font-color:          $base-color !default
+$alert-color-success:       #dff0d8 !default
+$alert-color-info:          #d9edf7 !default
+$alert-color-warning:       #fcf8e3 !default
+$alert-color-error:         #fff0f0 !default
+$alert-color-debug:         #563d7c !default
+$alert-font-color-success:  $success-color !default
+$alert-font-color-info:     $info-color !default
+$alert-font-color-warning:  $warning-color !default
+$alert-font-color-error:    $error-color !default
+$alert-font-color-debug:    $debug-color !default
+$alert-border-color-success: #d6e9c6 !default
+$alert-border-color-info:    #bce8f1 !default
+$alert-border-color-warning: #faebcc !default
+$alert-border-color-error:   #e89f9f !default
+$alert-border-color-debug:   #563d7c !default
+
+.alert
+    position: relative
+    padding: 10px 50px 10px 10px
+    font-size: $alert-font-size
+    line-height: $alert-line-height
+    color: $alert-font-color
+    text-align: center
+    border-radius: 3px
+    border: 1px solid
+    min-height: 15px
+
+    a
+        color: $alert-font-color
+
+    &--success
+        background-color: $alert-color-success
+        border-color: $alert-border-color-success
+        @if $alert-font-color-success != $alert-font-color
+            color: $alert-font-color-success
+
+        .icn
+            fill: $alert-font-color-success
+
+    &--info
+        background-color: $alert-color-info
+        border-color: $alert-border-color-info
+        @if $alert-font-color-info != $alert-font-color
+            color: $alert-font-color-info
+
+        .icn
+            fill: $alert-font-color-info
+
+    &--warning
+        background-color: $alert-color-warning
+        border-color: $alert-border-color-warning
+        @if $alert-font-color-warning != $alert-font-color
+            color: $alert-font-color-warning
+
+        .icn
+            fill: $alert-font-color-warning
+
+    &--error
+        background-color: $alert-color-error
+        border-color: $alert-border-color-error
+        @if $alert-font-color-error != $alert-font-color
+            color: $alert-font-color-error
+
+        .icn
+            fill: $alert-font-color-error
+
+    &--debug
+        background-color: $alert-color-debug
+        border-color: $alert-border-color-debug
+        @if $alert-font-color-debug != $alert-font-color
+            color: $alert-font-color-debug
+
+        .icn
+            fill: $alert-font-color-debug
+
+    &--ie
+        display: none
+
+        .lt-ie9 &
+            display: block
+
+.alert__close-button
+    position: absolute
+    right: 4px
+    top: 4px
+
+    padding: 15px
+
+    line-height: 0
+
+
