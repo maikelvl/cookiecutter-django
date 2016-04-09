@@ -2,7 +2,6 @@ grunt:
     extends:
         file: docker-compose-base.yml
         service: grunt
-    restart: always
     volumes:
         - {{ cookiecutter.short_name }}-static-dist:/project/src/static/{{ cookiecutter.short_name }}/dist
 
