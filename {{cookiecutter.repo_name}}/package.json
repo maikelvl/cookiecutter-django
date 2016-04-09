@@ -1,5 +1,6 @@
 {
   "name": "{{ cookiecutter.repo_name }}",
+  "description": "{{ cookiecutter.description }}",
   "version": "{{ cookiecutter.version }}",
   "private": true,
   "dependencies": {
