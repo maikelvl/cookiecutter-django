@@ -6,7 +6,7 @@
     "project_name": "Project Name",
     "repo_name": "{{ cookiecutter.project_name|lower|replace(' ', '-') }}",
     "short_name": "{{ cookiecutter.repo_name|replace('-', '')|replace('_', '') }}",
-    "repository": "git@git.grimlock.io:{{ cookiecutter.client_repo_name }}/{{ cookiecutter.client_repo_name }}-{{ cookiecutter.repo_name }}.git",
+    "repository": "",
     "host_name": "www.{{ cookiecutter.client_repo_name|replace('-', '') }}.nl",
     "staging_host_name": "{{ cookiecutter.repo_name }}.example.com",
     "description": "",
