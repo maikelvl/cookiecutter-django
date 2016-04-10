@@ -2,12 +2,18 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.sitemaps import views as sitemap_views
 from django.views.generic.base import TemplateView
 
-from main.views import OpenSearchXMLView
+# from main.views import OpenSearchXMLView
 
+from .sitemaps import StaticSitemap
 from .views import ErrorView
 
+
+sitemaps = {
+    'static': StaticSitemap,
+}
 
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='home.html'), name='home'),
@@ -20,6 +26,11 @@ urlpatterns = [
 
     # url(r'^zoeken/$', SearchView.as_view(), name='search'),
     # url(r'^opensearch\.xml$', OpenSearchXMLView.as_view(), name="opensearch"),
+
+    url(r'^sitemap\.xml$', sitemap_views.index, {'sitemaps': sitemaps},
+        name='sitemap'),
+    url(r'^sitemap-(?P<section>.+)\.xml$', sitemap_views.sitemap,
+        {'sitemaps': sitemaps}),
 ]
 
 if settings.DEBUG:
